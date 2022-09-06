@@ -10,7 +10,7 @@ const createBlog = async function(req,res){
         return res.status(400).send({status:false, msg:"Please provide title"})
     }
     if(!isValid(body)){
-        return res.status(400).send({status:false, msg:"Please provide body"})
+        return res.status(400).send({status:false, msg:"Please provide body of blog"})
     }
     if(!isValid(tags)){
         return res.status(400).send({status:false, msg:"Please provide tags"})
