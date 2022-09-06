@@ -15,7 +15,9 @@ router.post("/blog", blogController.createBlog);
 
 //______________________________get api (blog document)______________________________________>>>
 
-router.get("/getBlogs", authorController.getBlogs);
+// router.get("/getBlogs", authorController.getBlogs);
+router.get('/getBlogs', blogController.getBlogs);
+router.get('/updateBlog', authorController.updateBlog);
 
 //______________________________update api __________________________________________________>>>
 
