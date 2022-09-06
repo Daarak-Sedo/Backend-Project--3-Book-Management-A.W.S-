@@ -2,17 +2,20 @@ const blogModel = require('../models/blogModel');
 const authorModel = require('../models/authorModels');
 const {isValid} = require('../controllers/authorController') ; 
 
+
+//___create blog__________________________________________________________________________________
+
 const createBlog = async function(req,res){
     try{
     let data = req.body;
-    let {title, body, authorId, tags} = data;
+    let {title, body, authorId} = data;
     if(!isValid(title)){
         return res.status(400).send({status:false, msg:"Please provide title"})
     }
     if(!isValid(body)){
         return res.status(400).send({status:false, msg:"Please provide body of blog"})
     }
-    if(!isValid(tags)){
+    if(!tags){
         return res.status(400).send({status:false, msg:"Please provide tags"})
     }
     let checkAuthorId = await authorModel.findById(authorId);
@@ -25,6 +28,8 @@ const createBlog = async function(req,res){
         return res.status(500).send({Satus:false, msg:err.message});
     }
 }
+
+//===========================================================================================
 
 module.exports.createBlog = createBlog;
 

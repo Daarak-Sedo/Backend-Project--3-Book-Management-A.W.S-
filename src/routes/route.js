@@ -1,13 +1,29 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const authorControllers = require('../controllers/authorController');
-const blogControllers = require('../controllers/blogController');
+const authorController = require("../controllers/authorController");
+const blogController = require("../controllers/blogController");
+
+//==============================>>>Phase-1<<<==================================================
+
+//______________________________post api (author)___________________________________________>>>
+
+router.post("/author", authorController.createAuthor);
+
+//______________________________post api (blog)_____________________________________________>>>
+
+router.post("/blog", blogController.createBlog);
+
+//______________________________get api (blog document)______________________________________>>>
+
+router.get("/getBlogs", authorController.getBlogs);
+
+//______________________________update api __________________________________________________>>>
 
 
-router.post('/author', authorControllers.createAuthor);
+//______________________________delete api (author)___________________________________________>>>
 
-router.post('/blog', blogControllers.createBlog);
 
+//=============================================================================================
 
 
 module.exports = router;

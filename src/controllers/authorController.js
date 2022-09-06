@@ -2,14 +2,14 @@ const { default: mongoose } = require("mongoose");
 const authorModel = require("../models/authorModels");
 const blogModel = require("../models/blogModel");
 
-//=============================Validation==========================================
+//=============================Validation================================================
 const isValid = function (value) {
   if (typeof value === "undefined" || value === null) return false;
   if (typeof value === "string" && value.trim().length === 0) return false;
   if (typeof value != "string") return false;
   return true;
 };
-
+//===========================post Api for creating author================================
 const createAuthor = async function (req, res) {
   try {
     const data = req.body;
@@ -37,29 +37,37 @@ const createAuthor = async function (req, res) {
     return res.status(500).send({ msg: err.message });
   }
 };
-//===============================================================
-// const getBlogs = async ()=>{
-//   try{
-//   let data = req.query;
-//   let getBlogs = await blog.find({
-//     $and: [
-//       { $and: [{ isDeleted: false }, { isPublished: true }] },
-//       {
-//         $or: [
-//           { authorId: { $in: data.authorId } },
-//           { category: { $in: [data.category] } },
-//           { tags: { $in: [data.tags] } },
-//           { subCategory: { $in: [data.subCategory] } },
-//         ],
-//       },
-//     ],
-//   });
+//=================================get api===============================================
 
-// }catch(err){
-//   return res.status(500).send({status:true, msg:err.message});
-// }
-// }
+ const getBlogs = async function (req, res) {
+  try {
+     const queries = req.query // it gives an object
+    
+      if (Object.keys(queries) == 0) {
+          const result1 = await blogModel.find({ isDeleted: false, isPublished: true })//.count()
+          if (result1.length == 0) return res.status(404).send({ status: false, msg: "no data found" })
+          return res.status(200).send({ status: true, data: result1 })
+      }
 
-//===========================================================================
+      //--------------------------------- this is for query param ---------------------------
+      else {
+          const result2 = await blogModel.find(queries).find({ isDeleted: false, isPublished: false })//.count()
+          if (result2.length == 0) return res.status(404).send({ status: false, msg: "no data found" })
+          return res.status(200).send({ status: true, data: result2 })
+      }
+  }
+  catch (err) {
+      return res.status(500).send({ status: false, msg: err.message })
+  }
+}
+
+//===================================module expoting==========================================
+   
 module.exports.createAuthor = createAuthor;
+
 module.exports.isValid= isValid;
+module.exports.getBlogs= getBlogs;
+
+
+//mongoose.isValidObjectId(id)
+

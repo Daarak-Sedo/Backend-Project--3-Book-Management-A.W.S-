@@ -26,11 +26,17 @@ const blogSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    createdAt:{
+      typr:Date
+    },
+    updatedAt:{
+      type:Date
+    },
     deletedAt: {
       type: Date,
       default: null,
     },
-    publishedAt: String,
+    publishedAt:Date,
     isPublished: {
       type: Boolean,
       default: false,
