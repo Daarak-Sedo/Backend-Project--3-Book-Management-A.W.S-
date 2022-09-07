@@ -25,6 +25,7 @@ router.put('/blogs/:blogId', blogController.updatedBlog);
 //_______________________________delete api__________________________________________________>>>
 
  router.delete('/blogs/:blogId', blogController.deletedBlog);
+ router.delete('/blogs/queryParams', blogController.deleteBlogsByQueryParam);
 
 //=============================================================================================
 

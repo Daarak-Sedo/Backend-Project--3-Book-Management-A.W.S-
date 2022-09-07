@@ -1,6 +1,6 @@
 const express = require("express");
-const route = require("./routes/route");
 const bodyParser = require("body-parser");
+const route = require("./routes/route");
 const { default: mongoose } = require("mongoose");
 const app = express();
 
@@ -10,12 +10,13 @@ let url ="mongodb+srv://projectBlogGroup4:vtbjJPPyqvrHsBXQ@cluster0.rrdjyhd.mong
 let port = process.env.PORT || 3000;
 
 mongoose.connect(url, {
-    useNewUrlParser: true
-}).then( () => console.log("MongoDb is connected" ))
-.catch( err => console.log(err) )
+    useNewUrlParser: true,
+  })
+  .then(() => console.log("MongoDb is connected"))
+  .catch((err) => console.log(err));
 
-app.use('/', route) 
+app.use("/", route);
 
-app.listen(port, function () {
-    console.log('Express app running on port' + port);
+app.listen(port, function() {
+  console.log("Express app running on port" + port);
 });
