@@ -15,15 +15,16 @@ router.post("/blog", blogController.createBlog);
 
 //______________________________get api (blog document)______________________________________>>>
 
-// router.get("/getBlogs", authorController.getBlogs);
-router.get('/getBlogs', blogController.getBlogs);
-router.get('/updateBlog', authorController.updateBlog);
+
+router.get('/blogs', blogController.getBlogs);
 
 //______________________________update api __________________________________________________>>>
 
+router.put('/blogs/:blogId', blogController.updatedBlog);
 
+//_______________________________delete api__________________________________________________>>>
 
-
+ router.delete('/blogs/:blogId', blogController.deletedBlog);
 
 //=============================================================================================
 
