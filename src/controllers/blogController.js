@@ -69,6 +69,7 @@ const getBlogs = async function (req, res) {
 const updatedBlog = async function (req, res) {
   try {
     const blogId = req.params.blogId;
+    const authorIdFromToken = req.authorId;
     const blogData = req.body;
 
     let { title, body, tags, subcategory } = blogData;
@@ -77,6 +78,11 @@ const updatedBlog = async function (req, res) {
 
     if (Object.keys(blogData).length == 0)
       return res.status(400).send({ status: false, msg: "Body is required" });
+
+      const checkBlog = await blogModel.findOne({_id:blogId})
+      if(checkBlog.authorId.toString()!==authorIdFromToken){
+        res.status(401).send({status:false,msg:"unauthorized access"})
+      }
 
     let blog = await blogModel.findOneAndUpdate(
       { _id: blogId, isDeleted: false },
@@ -103,6 +109,7 @@ const updatedBlog = async function (req, res) {
 const deletedBlog = async (req, res) => {
   try {
     let blogId = req.query.blogId;
+    const authorIdFromToken = req.authorId;
     let checkBlogId = await blogModel.findById(blogId);
     // if(!checkBlogId){
     //    res.status(404).send({status:false, msg:"no such blog is exist"});
@@ -110,6 +117,10 @@ const deletedBlog = async (req, res) => {
     if (checkBlogId.isDeleted) {
       return res.status(404).send({ status: false, msg: "blog is already deleted" });
     }
+    const checkBlog = await blogModel.findOne({_id:blogId})
+      if(checkBlog.authorId.toString()!==authorIdFromToken){
+        res.status(401).send({status:false,msg:"unauthorized access"})
+      }
     let deletedBlog = await blogModel.findOneAndUpdate(
       { _id: blogId },
       { $set: { isDeleted: true, deletedAt: Date.now() } },
@@ -126,20 +137,50 @@ const deletedBlog = async (req, res) => {
 };
 //______delete blogs api 2 by given fields _________________________________________>>>
 
-const deleteBlogs = async (req, res) => {
+const deleteByQueryParams = async (req, res) => {
+  try{
   let data = req.query;
-  let { category, authorid, tag, name, subcategory, unpublished } = data;
-
-  if (Object.keys(data) == 0)
+  let filterQuery = {isDeleted:false,deletedAt:null}
+  const authorIdFromToken = req.authorId;
+  let { category, authorId, tags, subcategory, isPublished } = data;
+  
+  if (Object.keys(data) == 0){
     return res.status(400).send({ msg: "InValid request" });
-
-  for (let key in data) {
-    if (data.hasOwnProperty(key)) {
-      let deletedata = await blogModel.findOneAndDelete(key);
-      return res.status(200).send({ status: true, msg: "successfull" });
-    }
   }
-};
+  if(isValid(category)){
+    filterQuery['category'] = category;
+  }
+  if(isValid(tags)){
+    const tagsArray = tags.trim().split(',').map(tag=>tag.trim())
+    filterQuery['tags'] = {$all: tagsArray};
+  }
+  if(isValid(subcategory)){
+    const subcatArray = subcategory.trim().split(',').map(subcat=>subcat.trim())
+    filterQuery['subcateg'] = {$all: subcatArray};
+  }
+  if(isValid(isPublished)){
+    filterQuery['isPublished'] = isPublished;
+  }
+  if(isValid(authorId)){
+    filterQuery['authorId'] = authorId;
+  }
+  let blog = await blogModel.find(filterQuery)
+  if(Array.isArray(blog) && blog.length===0){
+    res.status(404).send({status:false, msg:"No matching blogs found"});
+  }
+  const blogsToDelete = blog.map(blog=>{
+    if(blog.authorId.toString()===authorIdFromToken) return blog._id
+  })
+  if(blogsToDelete.length===0){
+    res.status(404).send({status:false, msg:"no matching blogs found"})
+  }
+  await blogModel.updateMany({_id: {$in: blogsToDelete }},{$set:{isDeleted:true, deletedAt:Date.now()}})
+  res.status(200).send({status:true, msg:"blog deleted successfully"})
+
+}catch(err){
+  return res.status(500).send({status:false, msg: err.message});
+}
+}
 
 //==================================module exporting =========================================================
 
@@ -147,4 +188,4 @@ module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.updatedBlog = updatedBlog;
 module.exports.deletedBlog = deletedBlog;
-module.exports.deleteBlogs = deleteBlogs;
+module.exports.deleteByQueryParams = deleteByQueryParams;

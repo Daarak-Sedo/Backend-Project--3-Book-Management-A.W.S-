@@ -8,13 +8,13 @@ const authentication = async function (req, res, next) {
     if (!token) req.headers["x-api-key"];
     if (!token)
       return res.status(400).send({ status: false, msg: "Token Must be Filled" });
-    console.log(token);
-
+    
     // verify token :
     let decodedToken = jwt.verify(token, "project_1");
     if (!decodedToken)
       return res.status(400).send({status: false,msg: "Token Not Verified Please Enter Valid Token"});
-    return res.status(200).send({ status: true, msg: "Author Authenticated Succesfully " });
+    // return res.status(200).send({ status: true, msg: "Author Authenticated Succesfully " });
+    req.authorId = decodedToken.authorId;
 
     next();
   } catch (err) {
@@ -26,7 +26,7 @@ const authentication = async function (req, res, next) {
 const authorization = async function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];
-    // if (!token) token = req.headers["x-api-key"];
+    if (!token) token = req.headers["x-api-key"];
     if (!token) {
       return res.status(400).send({ status: false, msg: "Token must be present" });
     }
@@ -34,7 +34,7 @@ const authorization = async function (req, res, next) {
     if (!decodedToken) {
       return res.status(401).send({ status: false, msg: "Token is invalid" });
     }
-    let authorToBeModified = req.params.authorId;
+    let authorToBeModified = req.authorId;
     let authorLoggedin = decodedToken.authorId;
     if (authorToBeModified != authorLoggedin) {
       return res.status(403).send({status: false,msg: "author loggedin not allowed to modify changes"});

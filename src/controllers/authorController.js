@@ -44,10 +44,10 @@ let loginAuthor = async function (req, res) {
     let password = req.body.password;
     console.log(email, password)
 
-    if (isValid(email)){
+    if (!isValid(email)){
       return res.status(400).send({ status: false, msg: "please provide valid email id" });
     }
-    if (isValid(password)){
+    if (!isValid(password)){
       return res.status(400).send({ status: false, msg: "please provide valid password" });
     }
     let checkData = await authorModel.findOne({ email: email, password: password });
@@ -56,7 +56,7 @@ let loginAuthor = async function (req, res) {
     }
     let token = jwt.sign(
       {
-        authorId: author._id,
+        authorId: checkData._id,
         project: 1,
         group: "group-4",
       },
