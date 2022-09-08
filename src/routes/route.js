@@ -2,32 +2,29 @@ const express = require("express");
 const router = express.Router();
 const authorController = require("../controllers/authorController");
 const blogController = require("../controllers/blogController");
+const auth = require("../middleware/auth");
 
-//==============================>>>Phase-1<<<==================================================
-
-//______________________________post api (author)___________________________________________>>>
-
+//______________________________post api (author creation)__________________________________>>>
 router.post("/author", authorController.createAuthor);
 
-//______________________________post api (blog)_____________________________________________>>>
+//_______________________________post api for login aouthor ________________________________>>>
+router.post("/loginAuthor", authorController.loginAuthor);
 
+//______________________________post api (blog creation)_____________________________________>>>
 router.post("/blog", blogController.createBlog);
 
 //______________________________get api (blog document)______________________________________>>>
+router.get("/blogs", auth.authentication, blogController.getBlogs);
 
+//______________________________update api ___________________________________________________>>>
+router.put("/blogs/:blogId", auth.authentication,auth.authorization,blogController.updatedBlog);
 
-router.get('/blogs', blogController.getBlogs);
+//_______________________________delete api-1_________________________________________________>>>
+router.delete("/blog", auth.authentication,auth.authorization,blogController.deletedBlog);
 
-//______________________________update api __________________________________________________>>>
+//_______________________________delete api-1_________________________________________________>>>
+router.delete("/blogs/:blogId",auth.authentication,auth.authorization, blogController.deleteBlogs);
 
-router.put('/blogs/:blogId', blogController.updatedBlog);
-
-//_______________________________delete api__________________________________________________>>>
-
- router.delete('/blogs/:blogId', blogController.deletedBlog);
- router.delete('/blogs/queryParams', blogController.deleteBlogsByQueryParam);
-
-//=============================================================================================
-
+//===============================================================================================
 
 module.exports = router;

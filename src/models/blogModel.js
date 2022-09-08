@@ -27,7 +27,7 @@ const blogSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-    subCategory: {
+    subcategory: {
       type: [String],
       trim: true,
     },
@@ -54,3 +54,11 @@ const blogSchema = new mongoose.Schema(
 module.exports = mongoose.model("blog", blogSchema);
 
 // { title: {mandatory}, body: {mandatory}, authorId: {mandatory, refs to author model}, tags: {array of string}, category: {string, mandatory, examples: [technology, entertainment, life style, food, fashion]}, subcategory: {array of string, examples[technology-[web development, mobile development, AI, ML etc]] }, createdAt, updatedAt, deletedAt: {when the document is deleted}, isDeleted: {boolean, default: false}, publishedAt: {when the blog is published}, isPublished: {boolean, default: false}}
+
+
+//const getBooks = async function(req,res)
+// {
+//   let alldatabooks = await book_authModel.find().populate(['author','publisher'])
+//   res.send({alldatabooks});
+// }
+// 
