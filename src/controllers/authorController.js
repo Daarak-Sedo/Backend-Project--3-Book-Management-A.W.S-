@@ -69,7 +69,6 @@ let loginAuthor = async function (req, res) {
   }
 };
 
-
 //===================================module expoting==========================================
 
 module.exports.createAuthor = createAuthor;

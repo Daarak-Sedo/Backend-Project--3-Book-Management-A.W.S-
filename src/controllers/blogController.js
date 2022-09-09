@@ -4,7 +4,7 @@ const { isValid } = require("../controllers/authorController");
 
 //___create blogs__________________________________________________________________________________
 
-const createBlog = async function (req, res) {
+  const createBlog = async function (req, res) {
   try {
     let data = req.body;
     let { title, body, authorId, category } = data;
@@ -29,41 +29,38 @@ const createBlog = async function (req, res) {
 };
 //_______get api________________________________________________________________________>>>
 
-const getBlogs = async function (req, res) {
+const blogs = async function (req, res) {
   try {
-    let data = req.query;
-    let { authorId, category, tags, subcategory } = data;
-    let len = Object.keys(data).length;
-    if (authorId) {
-      console.log(`this is author ${authorId}`);
-      let getDataByAuthorId = await blogModel.find({
-        $and: [{ isDeleted: false, isPublished: true }, { authorId }],
-      });
-      return res.status(200).send({ status: true, data: getDataByAuthorId });
-    } else if (category) {
-      console.log(`this is the category  ${category}`);
-      let getDataByCategory = await blogModel.find({
-        $and: [{ isDeleted: false, isPublished: true }, { category }],
-      });
-      return res.status(200).send({ status: true, data: getDataByCategory });
-    } else if (tags) {
-      console.log(`this is the tags  ${tags}`);
-      let getDataByTag = await blogModel.find({
-        $and: [{ isDeleted: false, isPublished: true }, { tags }],
-      });
-      return res.status(200).send({ status: true, data: getDataByTag });
-    } else if (subcategory) {
-      console.log(`this is the subcategory  ${subcategory}`);
-      let getDataBySubcategory = await blogModel.find({
-        $and: [{ isDeleted: false, isPublished: true }, { subcategory }],
-      });
-      return res.status(200).send({ status: true, data: getDataBySubcategory });
+    const filterQuery = {isDeleted: false,deletedAt: null,isPublished: true};
+    const queryParam = req.query;
+
+    const { authorId, category, tags, subcategory } = queryParam;
+    if (Object.keys(queryParam) == 0) {
+      return res.status(400).send({ status: false, msg: "InValid request" });
     }
+    if (isValid(category)) {
+      filterQuery["category"] = category;
+    }
+    if (isValid(tags)) {
+      const tagsArray = tags.trim().split(",").map((tag) => tag.trim());
+      filterQuery["tags"] = { $all: tagsArray };
+    }
+    if (isValid(subcategory)) {
+      const subcatArray = subcategory.trim().split(",").map((subcat) => subcat.trim());
+      filterQuery["subcateg"] = { $all: subcatArray };
+    }
+    if (isValid(authorId)) {
+      filterQuery["authorId"] = authorId;
+    }
+    const blogs = await blogModel.find(filterQuery);
+    if (Array.isArray(blogs) && blogs.length === 0) {
+      res.status(404).send({ status: false, msg: "No matching blogs found" });
+    }
+    res.status(200).send({ status: true, msg: "Found Matching", data: blogs });
   } catch (err) {
-    return res.status(500).send({ Satus: false, msg: err.message });
+    return res.status(500).send({ status: false, msg: err.message });
   }
 };
-
 //_____update api_______________________________________________________________________>>>
 
 const updatedBlog = async function (req, res) {
@@ -137,7 +134,7 @@ const deletedBlog = async (req, res) => {
 };
 //______delete blogs api 2 by given fields _________________________________________>>>
 
-const deleteByQueryParams = async (req, res) => {
+  const deleteByQueryParams = async (req, res) => {
   try{
   let data = req.query;
   let filterQuery = {isDeleted:false,deletedAt:null}
@@ -185,7 +182,7 @@ const deleteByQueryParams = async (req, res) => {
 //==================================module exporting =========================================================
 
 module.exports.createBlog = createBlog;
-module.exports.getBlogs = getBlogs;
+module.exports.blogs = blogs;
 module.exports.updatedBlog = updatedBlog;
 module.exports.deletedBlog = deletedBlog;
 module.exports.deleteByQueryParams = deleteByQueryParams;

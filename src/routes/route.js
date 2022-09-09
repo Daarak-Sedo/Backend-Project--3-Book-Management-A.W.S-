@@ -14,7 +14,8 @@ router.post("/loginAuthor", authorController.loginAuthor);
 router.post("/blog", blogController.createBlog);
 
 //______________________________get api (blog document)______________________________________>>>
-router.get("/blogs", blogController.getBlogs);
+
+router.get("/blogs", blogController.blogs);
 
 //______________________________update api ___________________________________________________>>>
 router.put("/blogs/:blogId", auth.authentication,auth.authorization,blogController.updatedBlog);
