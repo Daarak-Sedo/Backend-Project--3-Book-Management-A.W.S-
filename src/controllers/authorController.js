@@ -16,26 +16,17 @@ const createAuthor = async function (req, res) {
    
     let { fname, lname, title, email, password } = data;
     if (!isEmpty(fname)) {
-      return res.status(400).send({ status: false, msg: "type error and empty field " });
+      return res.status(400).send({ status: false, msg: "fname must be present " });
     }
     if (!isEmpty(lname)) {
-      return res.status(400).send({ status: false, msg: "type error and empty field" });
+      return res.status(400).send({ status: false, msg: "lname must be present " });
     }
    //Validation for title
    if (!isEmpty(title)) {
-    return res.status(400).send({
-        status: false,
-        msg: "Title is Missing or does not have a valid input"
-    })
-}
-else {
+    return res.status(400).send({status: false,msg: "Title is Missing or does not have a valid input"})}
+   else {
     if (title != "Mr" && title != "Mrs" && title != "Miss") {
-        return res.status(400).send({
-            status: false,
-            msg: "Title can only be Mr Mrs or Miss"
-        })
-    }
-}
+        return res.status(400).send({status: false,msg: "Title can only be Mr Mrs or Miss"}) }}
 
     if (!isEmpty(email)) {
       return res.status(400).send({status: false, msg: "email is compulsory"});
@@ -74,7 +65,7 @@ let loginAuthor = async function (req, res) {
     let email = req.body.email;
     let password = req.body.password;
 
-    if (Object.keys(req.body).length == 0) {
+    if (Object.keys(req.body).length == 0) {   // Object.keys() array of keys will return
       return res.status(400).send({status: false, message: "Please provide email and password"});
     }
     if (!isEmpty(email)){
@@ -89,7 +80,6 @@ let loginAuthor = async function (req, res) {
     }
     let token = jwt.sign({
         authorId: checkData._id.toString(),
-        bootCamp: "FunctionUp",
         group: "group-4",
       },"project1");
     
@@ -101,6 +91,6 @@ let loginAuthor = async function (req, res) {
 
 module.exports.createAuthor = createAuthor;
 module.exports.loginAuthor = loginAuthor;
-module.exports.isEmpty = isEmpty;
+
 
 

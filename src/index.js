@@ -9,9 +9,7 @@ app.use(bodyParser.json());
 let url ="mongodb+srv://projectBlogGroup4:vtbjJPPyqvrHsBXQ@cluster0.rrdjyhd.mongodb.net/project-1";
 let port = process.env.PORT || 3000;
 
-mongoose.connect(url, {
-    useNewUrlParser: true,
-  })
+mongoose.connect(url, {useNewUrlParser: true })
   .then(() => console.log("MongoDb is connected"))
   .catch((err) => console.log(err));
 
