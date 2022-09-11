@@ -18,5 +18,5 @@ mongoose.connect(url, {
 app.use("/", route);
 
 app.listen(port, function() {
-  console.log("Express app running on port" + port);
+  console.log("Express app running on port " + port);
 });

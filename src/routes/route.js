@@ -11,20 +11,20 @@ router.post("/author", authorController.createAuthor);
 router.post("/loginAuthor", authorController.loginAuthor);
 
 //______________________________post api (blog creation)_____________________________________>>>
-router.post("/blog", blogController.createBlog);
+router.post("/blog", auth.authentication,blogController.createBlog);
 
 //______________________________get api (blog document)______________________________________>>>
 
-router.get("/blogs", blogController.blogs);
+router.get("/blogs", auth.authentication, blogController.getBlogs);
 
-//______________________________update api ___________________________________________________>>>
+//______________________________put api (blog updation)_______________________________________>>>
 router.put("/blogs/:blogId", auth.authentication,auth.authorization,blogController.updatedBlog);
 
 //_______________________________delete api-1_________________________________________________>>>
-router.delete("/blog", auth.authentication,auth.authorization,blogController.deletedBlog);
+router.delete("/blog/:blogId", auth.authentication,auth.authorization,blogController.deletedBlog);
 
-//_______________________________delete api-1_________________________________________________>>>
-router.delete("/blogs",auth.authentication,auth.authorization, blogController.deleteByQueryParams);
+//_______________________________delete api-2_________________________________________________>>>
+router.delete("/blogs",auth.authentication,auth.authoriseByQuery, blogController.deleteByQueryParams);
 
 //===============================================================================================
 
