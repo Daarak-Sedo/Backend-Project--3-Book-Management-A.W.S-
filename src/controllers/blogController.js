@@ -108,13 +108,13 @@ const updatedBlog = async function (req, res) {
         }
       }
       if(tags || tags== ""){
-        if (!isEmpty(category)) {
-          return res.status(400).send({ status: false, msg: "Please provide category" });
+        if (!isEmpty(tags)) {
+          return res.status(400).send({ status: false, msg: "Please provide tags" });
         }
       }
       if(subcategory || subcategory== ""){
-        if (!isEmpty(category)) {
-          return res.status(400).send({ status: false, msg: "Please provide category" });
+        if (!isEmpty(subcategory)) {
+          return res.status(400).send({ status: false, msg: "Please provide subcategory" });
         }
       }
 

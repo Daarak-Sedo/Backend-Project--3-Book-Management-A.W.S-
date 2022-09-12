@@ -6,7 +6,7 @@ const blogModel = require("../models/blogModel");
 const authentication = async function (req, res, next) {
   try {
     // check token :
-    let token = req.headers["X-Api-Key"];
+    let token = req.headers["x-api-key"];
     if (!token) req.headers["x-api-key"];
     if (!token)
       return res.status(400).send({ status: false, msg: "Token Must be Filled" });
