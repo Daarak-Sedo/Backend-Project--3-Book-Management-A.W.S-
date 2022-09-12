@@ -128,7 +128,7 @@ const deletedBlog = async (req, res) => {
     let checkBlogId = await blogModel.findById(blogId);
 
     if(!checkBlogId || (checkBlogId.isDeleted == true)){
-      return res.status(404).send({status : false,msg : "Blog has been deleted successfully"})         
+      return res.status(404).send({status : false,msg : "Blog has been already deleted "})         
   }
      let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId },{ $set: { isDeleted: true,deletedAt: Date.now()}},{ new: true });
     return res.status(200).send({status: true,msg: "Blog has been deleted successfully",data:deletedBlog});

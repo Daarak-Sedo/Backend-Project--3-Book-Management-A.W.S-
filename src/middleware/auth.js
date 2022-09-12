@@ -9,7 +9,7 @@ const authentication = async function (req, res, next) {
     let token = req.headers["x-api-key"];
     if (!token) req.headers["x-api-key"];
     if (!token)
-      return res.status(400).send({ status: false, msg: "Token Must be Filled" });
+      return res.status(401).send({ status: false, msg: "Token Must be Filled" });
     
     // verify token :
     let decodedToken = jwt.verify(token, "project1");
