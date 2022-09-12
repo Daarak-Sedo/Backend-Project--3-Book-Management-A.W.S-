@@ -46,39 +46,35 @@ let {isEmpty,isValidName, isValidObjectId} = validation;
 
 //_______get api________________________________________________________________________>>>
 
-const getBlogs = async function (req, res) {
+const getBlogs = async (req, res) => {
   try {
-    const filterQuery = {isDeleted: false,deletedAt: null,isPublished: true};
-    const queryParam = req.query;
 
-    const { authorId, category, tags, subcategory } = queryParam;
-    if (Object.keys(queryParam).length == 0) {
-      return res.status(400).send({ status: false, msg: "InValid request" });
+    let { authorId, category, tags, subcategory } = req.query;
+    let filter = { isDeleted: false, isPublished: true }
+
+    if (authorId) { filter.authorId = authorId }
+
+    if (req.query.authorId) {
+      if (!isValidObjectId(req.query.authorId)) {
+        return res.status(400).send({ status: false, msg: "Please Enter Valid Author Id " })
+      } else {
+        req.query.authorId = authorId
+      }
     }
-    if (isEmpty(category)) {
-      filterQuery["category"] = category;
+    if (category) { filter.category = category }
+    if (tags) { filter.tags = tags }
+    if (subcategory) { filter.subcategory = subcategory }
+
+    let savedData = await blogModel.find(filter)
+    if (savedData.length == 0) {
+      return res.status(404).send({ status: false, msg: "Such Blogs Not Available" })
+    } else {
+      return res.status(200).send({ status: true, data: savedData })
     }
-    if (isEmpty(tags)) {
-      const tagsArray = tags.trim().split(",").map((tag) => tag.trim());
-      filterQuery["tags"] = { $all: tagsArray };
-    }
-    if (isEmpty(subcategory)) {
-      const subcatArray = subcategory.trim().split(",").map((subcat) => subcat.trim());
-      filterQuery["subcategory"] = { $all: subcatArray };
-    }
-    if (isEmpty(authorId)) {
-      filterQuery["authorId"] = authorId;
-    }
-    const blogs = await blogModel.find(filterQuery);
-    if (Array.isArray(blogs) && blogs.length === 0) {
-      res.status(404).send({ status: false, msg: "No matching blogs found" });
-    }
-    res.status(200).send({ status: true, msg: "Found Matching", data: blogs });
   } catch (err) {
-    return res.status(500).send({ status: false, msg: err.message });
+    res.status(500).send({ status: false, msg: err.message })
   }
-};
-
+}
 //_____update api_______________________________________________________________________>>>
 
 const updatedBlog = async function (req, res) {
