@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const route = require("./routes/route");
 const { default: mongoose } = require("mongoose");
+const authorModel = require("./models/authorModel");
 const app = express();
 
 app.use(bodyParser.json());
@@ -18,3 +19,13 @@ app.use("/", route);
 app.listen(port, function() {
   console.log("Express app running on port " + port);
 });
+
+
+/* Group-4 :
+
+Ishaan: 6378088268
+Atul:  
+Subhajit Banerjee:
+Meenakshi Lodhi : 9761366474
+
+*/

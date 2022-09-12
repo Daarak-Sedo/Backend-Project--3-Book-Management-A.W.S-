@@ -144,9 +144,6 @@ const deletedBlog = async (req, res) => {
 const deleteByQueryParams = async function (req, res) {
   try {
     let data = req.query;
-    if(!Object.keys(data).length==0){
-      return res.status(400).send({status: false, message: 'keys must be present'});
-    }
       const deleteByQuery = await blogModel.updateMany({ $and: [data ,{authorId : req.id}, { isDeleted: false }] },{ $set: { isDeleted: true ,deletedAt:new Date()} },{ new: true, upsert : true })
       let count = deleteByQuery.modifiedCount
       if (deleteByQuery.modifiedCount==0) {
