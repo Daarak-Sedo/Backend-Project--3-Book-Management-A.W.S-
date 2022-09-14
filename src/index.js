@@ -20,11 +20,3 @@ app.listen(port, function() {
 });
 
 
-/* Group-4 :
-
-Ishaan: 6378088268
-Atul:  
-Subhajit Banerjee:
-Meenakshi Lodhi : 9761366474
-
-*/
