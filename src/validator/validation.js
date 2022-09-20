@@ -1,16 +1,19 @@
 const mongoose = require('mongoose');
 
 //Name Validation
-const isValidName = function (name) {
-  const nameRegex = /^[a-zA-Z ]+$/;
-  return nameRegex.test(name);
+// const isValidName = function (name) {
+//   const nameRegex = /^[a-zA-Z ]+$/;
+//   return nameRegex.test(name);
+// };
+//<<----------------Validation for Phone No. ---------------->>
+const isValidPhone = function (phone) {
+  return /^([+]\d{2})?\d{10}$/.test(phone);
 };
 
-//Email Validation
+
+//<<----------------Validation for Email ---------------->>
 const isValidEmail = function (email) {
-  const emailRegex =
-    /^[a-z0-9][a-z0-9-_\.]+@([a-z]|[a-z0-9]?[a-z0-9-]+[a-z0-9])\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
-  return emailRegex.test(email);
+  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
 };
 
 // Password Validation
@@ -33,11 +36,15 @@ const isEmpty = function (value) {
   
 module.exports = {
     isEmpty,
-    isValidName,
+    // isValidName,
     isValidEmail,
-    isValidObjectId,
+    isValidPhone,
+    // isValidObjectId,
     isValidPassword,
 }  
+
+
+
 
 
 

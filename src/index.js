@@ -6,7 +6,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-let url ="mongodb+srv://projectBlogGroup4:vtbjJPPyqvrHsBXQ@cluster0.rrdjyhd.mongodb.net/project-1";
+let url ="mongodb+srv://group67:n1plamTjStICrIRT@cluster0.e8wifql.mongodb.net/group67";
 let port = process.env.PORT || 3000;
 
 mongoose.connect(url, {useNewUrlParser: true })
@@ -18,5 +18,8 @@ app.use("/", route);
 app.listen(port, function() {
   console.log("Express app running on port " + port);
 });
+
+
+
 
 

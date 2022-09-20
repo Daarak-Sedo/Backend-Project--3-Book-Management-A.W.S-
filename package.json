@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/index.js"
   },
-  "author": "Atul , Ishaan , Subhajit, Meenakshi",
+  "author": "Priyanka Panda, Rohan Kumar, Debasish Behera, Meenakshi Lodhi",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.0",
@@ -17,4 +17,7 @@
     "nodemon": "^2.0.19"
   }
 }
+
+
+
 

@@ -1,0 +1,6 @@
+street : ^[a-z A-Z \d]+$
+city : ^[a-z A-Z]+$
+pincode: ^[\d]{6}$
+
+
+
