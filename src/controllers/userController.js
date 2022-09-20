@@ -2,7 +2,7 @@ const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const validation = require("../validator/validation");
 
-let {isEmpty,isValidEmail,isValidPhone, isValidPassword} = validation;
+let {isEmpty,isValidEmail,isValidPhone, isValidPassword,pincode,street,city} = validation;
 
 //__________post Api for creating author______________________>>>
 
@@ -14,7 +14,7 @@ const createUser = async function (req, res) {
       return res.status(400).send({ status: "false", message: "All fields are mandatory" });
       }
    
-    let { title, name, phone, email, password} = data;
+    let { title, name, phone, email, password,address} = data;
     if (!isEmpty(name)) {
       return res.status(400).send({ status: false, msg: "Name must be present " });
     }
@@ -34,12 +34,7 @@ const createUser = async function (req, res) {
   if (existedphone)
     return res.status(400).send({status: false,message: "This Mobile No. is already registered"});
 
-    if (!isEmpty(password)) {
-      return res.status(400).send({ status: false, msg: "Password is mandatory" });
-    }
-    if (!isValidPassword(password)) {
-      return res.status(400).send({status: "false",message:"Password must contain atleast 8 characters including one upperCase, lowerCase, special characters and Numbers"});
-    }
+    
     if (!isEmpty(email)) {
       return res.status(400).send({status: false, msg: "email is compulsory"});
     }
@@ -50,6 +45,32 @@ const createUser = async function (req, res) {
     if(checkEmail){
       return res.status(400).send({status:false, msg: "email is already registered "});
     }
+
+    if (!isEmpty(password)) {
+      return res.status(400).send({ status: false, msg: "Password is mandatory" });
+    }
+    if (!isValidPassword(password)) {
+      return res.status(400).send({status: "false",message:"Password must contain atleast 8 characters including one upperCase, lowerCase, special characters and Numbers"});
+    }
+
+    if(!street(address.street)){
+      return res.status(400).send({ status: false, msg: "Enter valid Street Name" })
+    }
+
+    if(!city(address.city)){
+      return res.status(400).send({ status: false, msg: "Enter valid City Name" })
+    }
+
+
+    if(!pincode(address.pincode)){
+      return res.status(400).send({ status: false, msg: "Enter valid Pin code" })
+    }
+
+
+
+
+
+
     
     const result = await userModel.create(data);
     res.status(201).send({ status: true, msg: "new user is created", data: result });

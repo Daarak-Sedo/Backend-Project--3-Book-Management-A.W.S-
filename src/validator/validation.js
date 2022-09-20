@@ -33,10 +33,34 @@ const isEmpty = function (value) {
   const isValidObjectId = (objectId) => {
     return mongoose.Types.ObjectId.isValid(objectId);
   };
+
+
+  //------------------>>>>>>>validation for street------------------------<<<<<<<<<<
+
+const street=function (charNum){
+  const streetRegex=/^[a-z A-Z \d]+$/
+  return streetRegex.test(charNum)
+}
+
+//------------------->>>>>>>>>>>>>>validation for city-------------------<<<<<<<<<<
+
+const city=function (city){
+  const cityRegex=/^[a-z A-Z]+$/
+  return cityRegex.test(city)
+}
+//----------------------validation for pin code--------------->>>>>>>>>>>>
+
+const pincode=function (pincode){
+  const pinRegex=/^[\d]{6}$/
+  return pinRegex.test(pincode)
+}
+
+
+
   
 module.exports = {
     isEmpty,
-    // isValidName,
+    pincode,city,street,
     isValidEmail,
     isValidPhone,
     // isValidObjectId,
