@@ -13,9 +13,17 @@ router.post("/login", userController.loginUser);
 // ------------------------------------post api for createBook------------------------------>>>
 router.post("/books",auth.authentication,bookController.createBook)
 
-//===============================================================================================
 
+//------------------------------------Get API for book details by Query--------------------->>>
 router.get("/books",auth.authentication,bookController.getBooks)
+
+
+//---------------------------------Get API for all book details by param------------------------->>>
+router.get("/books/:userId",auth.authentication,bookController.bookDetails)
+
+
+
+
 module.exports = router;
 
 
