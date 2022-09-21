@@ -52,13 +52,6 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Please provide a valid ISBN" });
         }
 
-        let checkUserId = await userModel.findOne({userId:userId});
-        console.log(checkUserId)
-        if (!checkUserId) {
-            return res.status(400).send({ status: false, msg: "please provide valid author id" });
-        }
-        let dupBook= await bookModel.findOne(data)
-
         let bookData = await  bookModel.create(data)
         res.status(201).send({ status: true, msg: "Blog has been created", data: bookData });
         

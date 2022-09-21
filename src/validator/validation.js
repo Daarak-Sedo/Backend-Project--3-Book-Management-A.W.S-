@@ -37,9 +37,9 @@ const isEmpty = function (value) {
 
   //------------------>>>>>>>validation for street------------------------<<<<<<<<<<
 
-const street=function (charNum){
-  const streetRegex=/^[a-z A-Z \d]+$/
-  return streetRegex.test(charNum)
+const street=function (street){
+  const streetRegex=/^[a-z \, A-Z \d]+$/
+  return streetRegex.test(street)
 }
 
 //------------------->>>>>>>>>>>>>>validation for city-------------------<<<<<<<<<<
