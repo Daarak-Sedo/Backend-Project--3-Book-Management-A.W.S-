@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-//Name Validation
-// const isValidName = function (name) {
-//   const nameRegex = /^[a-zA-Z ]+$/;
-//   return nameRegex.test(name);
-// };
+// Name Validation
+const isValidName = function (name) {
+  const nameRegex = /^[a-zA-Z ]+$/;
+  return nameRegex.test(name);
+};
 //<<----------------Validation for Phone No. ---------------->>
 const isValidPhone = function (phone) {
   return /^([+]\d{2})?\d{10}$/.test(phone);
@@ -55,7 +55,11 @@ const pincode=function (pincode){
   return pinRegex.test(pincode)
 }
 
-
+// ---------------------validation for ISBN---------
+const checkISBN=function (ISBN){
+  const isbnRegex=/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?(?:(?:\D*\d){7})?$)/
+  return isbnRegex.test(ISBN)
+}
 
   
 module.exports = {
@@ -63,7 +67,9 @@ module.exports = {
     pincode,city,street,
     isValidEmail,
     isValidPhone,
-    // isValidObjectId,
+    isValidObjectId,
+    checkISBN,
+    isValidName,
     isValidPassword,
 }  
 

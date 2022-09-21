@@ -65,12 +65,6 @@ const createUser = async function (req, res) {
     if(!pincode(address.pincode)){
       return res.status(400).send({ status: false, msg: "Enter valid Pin code" })
     }
-
-
-
-
-
-
     
     const result = await userModel.create(data);
     res.status(201).send({ status: true, msg: "new user is created", data: result });

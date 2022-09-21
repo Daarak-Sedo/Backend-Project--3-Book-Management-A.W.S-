@@ -1,48 +1,71 @@
-// const blogModel = require("../models/bookModel");
-// const authorModel = require("../models/userModel");
-// const validation = require("../validator/validation");
-// let {isEmpty,isValidName, isValidObjectId} = validation;
+const bookModel = require("../models/bookModel");
+const userModel = require("../models/userModel");
+const validation = require("../validator/validation");
+let { isEmpty, isValidName, isValidObjectId, checkISBN } = validation;
 
-// //___create blogs__________________________________________________________________________________
+//___create blogs__________________________________________________________________________________
 
-//   const createBlog = async function (req, res) {
-//   try {
-//     let data = req.body;
-//     let { title, body, authorId, category } = data;
-//     if(Object.keys(data).length == 0){
-//       return res.status(400).send({ status: false, msg: "Please provide key in request body" });    
-//     }
-//     if(!isEmpty(authorId)){
-//       return res.status(400).send({ status: false, msg: "Please provide author ID" });
-//     } 
-//     if (!isEmpty(title)) {
-//       return res.status(400).send({ status: false, msg: "Please provide title" });
-//     }
-//     if (!isEmpty(body)) {
-//       return res.status(400).send({ status: false, msg: "Please provide body of blog" });
-//     }
-//     if (!isEmpty(category)) {
-//       return res.status(400).send({ status: false, msg: "Please provide category" });
-//     }
-//     if(!isValidName(title)){
-//       return res.status(400).send({ status: false, msg: "title should be alphabets only" });
-//     }
-//     if(!isValidName(category)){
-//       return res.status(400).send({ status: false, msg: "category should be alphabets only" });
-//     }
-//     if(!isValidObjectId(authorId)){
-//       return res.status(400).send({ status: false, msg: "Provide a valid author id" });
-//     }
-//     let checkAuthorId = await authorModel.findById(data.authorId);
-//     if (!checkAuthorId) {
-//       return res.status(400).send({ status: false, msg: "please provide valid author id" });
-//     }
-//     let blogData = await blogModel.create(data);
-//     res.status(201).send({ status: true, msg: "Blog has been created",  data: blogData, });
-//   } catch (err) {
-//     return res.status(500).send({ Satus: false, msg: err.message });
-//   }
-// };
+const createBook = async function (req, res) {
+    try {
+        let data = req.body;
+        let { title, excerpt, userId, ISBN, category, subcategory } = data;
+
+        if (Object.keys(data).length == 0) {
+            return res.status(400).send({ status: false, msg: "Please provide key in request body" });
+        }
+
+        if (!isEmpty(userId)) {
+            return res.status(400).send({ status: false, msg: "Please provide author ID" });
+        }
+        if (!isEmpty(title)) {
+            return res.status(400).send({ status: false, msg: "Please provide title" });
+        }
+
+        if (!isEmpty(excerpt)) {
+            return res.status(400).send({ status: false, msg: "Please provide excerpt of blog" });
+        }
+        if (!isEmpty(category)) {
+            return res.status(400).send({ status: false, msg: "Please provide category" });
+        }
+
+        if (!isEmpty(subcategory)) {
+            return res.status(400).send({ status: false, msg: "Please provide subcategory" });
+        }
+
+        if (!isValidName(title)) {
+            return res.status(400).send({ status: false, msg: "title should be alphabets only" });
+        }
+
+        if (!isValidName(category)) {
+            return res.status(400).send({ status: false, msg: "category should be alphabets only" });
+        }
+
+        if (!isValidObjectId(userId)) {
+            return res.status(400).send({ status: false, msg: "Provide a valid author id" });
+        }
+
+        if (!isEmpty(ISBN)) {
+            return res.status(400).send({ status: false, msg: "Please provide ISBN" });
+        }
+
+        if (!checkISBN(ISBN)) {
+            return res.status(400).send({ status: false, msg: "Please provide a valid ISBN" });
+        }
+
+        let checkUserId = await userModel.findOne({userId:userId});
+        console.log(checkUserId)
+        if (!checkUserId) {
+            return res.status(400).send({ status: false, msg: "please provide valid author id" });
+        }
+        let dupBook= await bookModel.findOne(data)
+
+        let bookData = await  bookModel.create(data)
+        res.status(201).send({ status: true, msg: "Blog has been created", data: bookData });
+        
+    } catch (err) {
+        return res.status(500).send({ Satus: false, msg: err.message });
+    }
+};
 
 // //_______get api________________________________________________________________________>>>
 
@@ -145,7 +168,7 @@
 
 // //======================module exporting ==================================
 
-// module.exports.createBlog = createBlog;
+module.exports.createBook = createBook;
 // module.exports.getBlogs = getBlogs;
 // module.exports.updatedBlog = updatedBlog;
 // module.exports.deletedBlog = deletedBlog;

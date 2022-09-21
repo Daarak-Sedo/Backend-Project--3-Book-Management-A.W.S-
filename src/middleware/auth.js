@@ -1,28 +1,27 @@
-// let jwt = require("jsonwebtoken");
-// const blogModel = require("../models/bookModel");
+let jwt = require("jsonwebtoken");
+const blogModel = require("../models/bookModel");
 
 // Authentication:->>>====================================================================>>>
 
-// const authentication = async function (req, res, next) {
-//   try {
-//     // check token :
-//     let token = req.headers["x-api-key"];
-//     if (!token) req.headers["x-api-key"];
-//     if (!token)
-//       return res.status(401).send({ status: false, msg: "Token Must be Filled" });
+const authentication = async function (req, res, next) {
+  try {
+    // check token :
+    let token = req.headers["x-api-key"];
+    if (!token)
+      return res.status(401).send({ status: false, msg: "Token Must be Filled" });
     
-//     // verify token :
-//     let decodedToken = jwt.verify(token, "project3");
-//     if (!decodedToken)
-//       return res.status(400).send({status: false,msg: "Token Not Verified Please Enter Valid Token"});
+    // verify token :
+    let decodedToken = jwt.verify(token, "project3");
+    if (!decodedToken)
+      return res.status(400).send({status: false,msg: "Token Not Verified Please Enter Valid Token"});
 
-//     req.token = decodedToken;
+    req.token = decodedToken;
 
-//     next();
-//   } catch (err) {
-//     res.status(500).send({ status: false, msg: err.message });
-//   }
-// };
+    next();
+  } catch (err) {
+    res.status(500).send({ status: false, msg: err.message });
+  }
+};
 
 // Authorization:->>>=======================================================================>>>
 
@@ -42,7 +41,7 @@
 //     return res.status(500).send({ status: false, msg: err.messge });
 //   }
 // };
-//================================================================
+// ================================================================
 // const authoriseByQuery = async function (req, res, next) {
 //   try {
 //       let authorLoggedIn = req.token.authorId    //Accessing authorId from attribute
@@ -80,9 +79,9 @@
 //       res.status(500).send({ msg: err.message })
 //   }
 // }
-// //============================================================================================
+//============================================================================================
 
-// module.exports.authentication = authentication;
+module.exports.authentication = authentication;
 // module.exports.authorization = authorization;
 // module.exports.authoriseByQuery = authoriseByQuery;
 
