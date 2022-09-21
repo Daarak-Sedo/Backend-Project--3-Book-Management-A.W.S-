@@ -15,6 +15,7 @@ router.post("/books",auth.authentication,bookController.createBook)
 
 //===============================================================================================
 
+router.get("/books",auth.authentication,bookController.getBooks)
 module.exports = router;
 
 

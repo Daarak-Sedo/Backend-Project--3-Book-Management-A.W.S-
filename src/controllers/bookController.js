@@ -62,35 +62,56 @@ const createBook = async function (req, res) {
 
 // //_______get api________________________________________________________________________>>>
 
-// const getBlogs = async (req, res) => {
-//   try {
+const getBooks = async (req, res) => {
 
-//     let { authorId, category, tags, subcategory } = req.query;
-//     let filter = { isDeleted: false, isPublished: true }
+try{
+    let { userId, category, subcategory } = req.query;
+    let filter = { isDeleted: false}
 
-//     if (authorId) { filter.authorId = authorId }
+    if (userId) { filter.userId = userId }
 
-//     if (req.query.authorId) {
-//       if (!isValidObjectId(req.query.authorId)) {
-//         return res.status(400).send({ status: false, msg: "Please Enter Valid Author Id " })
-//       } else {
-//         req.query.authorId = authorId
-//       }
-//     }
-//     if (category) { filter.category = category }
-//     if (tags) { filter.tags = tags }
-//     if (subcategory) { filter.subcategory = subcategory }
+    if (req.query.userId) {
+      if (!isValidObjectId(req.query.userId)) {
+        return res.status(400).send({ status: false, msg: "Please Enter Valid user Id " })
+      } else {
+        req.query.userId = userId
+      }
+    }
+    if (category){ { filter.category = category }
+    return res.status(400).send({status:false,message:"Please enter valid category"})}
 
-//     let savedData = await blogModel.find(filter)
-//     if (savedData.length == 0) {
-//       return res.status(404).send({ status: false, msg: "Such Blogs Not Available" })
-//     } else {
-//       return res.status(200).send({ status: true, data: savedData })
-//     }
-//   } catch (err) {
-//     res.status(500).send({ status: false, msg: err.message })
-//   }
-// }
+    if (subcategory) { filter.subcategory = subcategory }
+    return res.status(400).send({status:false,message:"Please enter valid subcategory"})
+
+    let savedData = await bookModel.find(filter)
+    if (savedData.length == 0) {
+      return res.status(404).send({ status: false, msg: "Such Book Not Available" })
+    } else {
+      return res.status(200).send({ status: true, data: savedData })
+    }
+}
+
+catch (err) {
+    res.status(500).send({ status: false, msg: err.massage })
+}
+  
+    // try {
+    //     let data = req.query;
+    //     if (!data) 
+    //         return res.status(404).send({ status: false, msg: "No data found in query" }) 
+
+    //     let getBook = await bookModel.find({ isDeleted: false, ...data }).select({title:1, excerpt:1, userId:1, category:1})  
+    //     if (getBook.length == 0)
+    //         return res.status(404).send({ status: false, msg: "no such documents found" })
+
+    //     res.status(200).send({ status: true, data: getBook })
+    //     // console.log(getData)
+
+    // } catch (err) {
+    //     res.status(500).send({ status: false, msg: err.massage })
+    // }
+  }
+
 // //_____update api_______________________________________________________________________>>>
 
 // const updatedBlog = async (req, res) => {
@@ -162,7 +183,7 @@ const createBook = async function (req, res) {
 // //======================module exporting ==================================
 
 module.exports.createBook = createBook;
-// module.exports.getBlogs = getBlogs;
+module.exports.getBooks = getBooks;
 // module.exports.updatedBlog = updatedBlog;
 // module.exports.deletedBlog = deletedBlog;
 // module.exports.deleteByQueryParams = deleteByQueryParams;
