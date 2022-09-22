@@ -2,7 +2,9 @@ const { response } = require("express");
 const bookModel = require("../models/bookModel");
 const userModel = require("../models/userModel");
 const validation = require("../validator/validation");
-let { isEmpty, isValidName, isValidObjectId, checkISBN } = validation;
+const reviewSchema=require("../models/reviewModel");
+const reviewModel = require("../models/reviewModel");
+let { isEmpty, isValidName, isValidObjectId, isValidISBN } = validation;
 
 //__________________________________________________________create blogs__________________________________________________________________________________
 
@@ -116,6 +118,14 @@ let bookId=req.params.bookId
 if(Object.keys(data).length==0){
     return res.status(400).send({status:false,message:"Please enter book details for updating"})
 }
+if (!isEmpty(excerpt)) {
+    return res.status(400).send({ status: false, msg: "Please provide excerpt of blog" });
+}
+if (!isEmpty(title)) 
+    return res.status(400).send({ status: false, msg: "Please provide title" });
+
+if (!isValidISBN(ISBN)) 
+    return res.status(400).send({ status: false, msg: "Please provide a valid ISBN" });
 
 let findBook=await bookModel.findById(bookId)
 if(findBook.isDeleted==true)
@@ -171,6 +181,28 @@ catch(err){_
 
 //-------------------------------------review books----------------------->>>>>>>>>
 
+const bookReview=async function(req,res){
+    try {
+        let data=req.body
+        let { review, rating, reviewedBy}=data
+         let bookId=req.params.bookId
+         if (!isValidObjectId(bookId)) {
+            return res.status(400).send({ status: false, msg: "Provide a valid author id" });
+        }
+        let reviewData=await reviewModel.create(data)
+        return res.status(201).send({status:true,message:"review created successful",data:reviewData})
+      
+
+        
+    } catch (error) {
+         return res.status(500).send({status:false,message:error.massage})
+    }
+}
+
+
+
+
+
 
 // //======================module exporting ==================================
 
@@ -179,6 +211,7 @@ module.exports.getBooks = getBooks;
 module.exports.bookDetails = bookDetails
 module.exports.updateBook =updateBook;
 module.exports.deleteBook =deleteBook;
+module.exports.bookReview=bookReview
 
 
 

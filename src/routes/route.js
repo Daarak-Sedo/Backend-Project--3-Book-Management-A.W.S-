@@ -32,6 +32,10 @@ router.delete("/books/:bookId", auth.authentication,auth.authorization,bookContr
 
 
 
+router.post("/books/:bookId/review",bookController.bookReview)
+
+
+
 module.exports = router;
 
 

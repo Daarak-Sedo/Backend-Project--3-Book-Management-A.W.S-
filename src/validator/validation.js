@@ -56,7 +56,7 @@ const pincode=function (pincode){
 }
 
 // ---------------------validation for ISBN---------
-const checkISBN=function (ISBN){
+const isValidISBN=function (ISBN){
   const isbnRegex=/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?(?:(?:\D*\d){7})?$)/
   return isbnRegex.test(ISBN)
 }
@@ -68,7 +68,7 @@ module.exports = {
     isValidEmail,
     isValidPhone,
     isValidObjectId,
-    checkISBN,
+    isValidISBN,
     isValidName,
     isValidPassword,
 }  
