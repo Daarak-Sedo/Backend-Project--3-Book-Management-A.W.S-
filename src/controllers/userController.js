@@ -97,7 +97,7 @@ let loginUser = async function (req, res) {
       return res.status(400).send({status: false,msg: "email or the password is not correct"});
     }
     let token = jwt.sign({
-        authorId: checkData._id.toString(),
+        userId: checkData._id.toString(),
         group: "group-67",
         iat:Math.floor(Date.now()/1000),
         exp:Math.floor(Date.now()/1000)+10*60*60,

@@ -1,6 +1,6 @@
 let jwt = require("jsonwebtoken");
-const blogModel = require("../models/bookModel");
-
+const bookModel = require("../models/bookModel");
+const validation = require("../validator/validation");
 // Authentication:->>>====================================================================>>>
 
 const authentication = async function (req, res, next) {
@@ -15,7 +15,7 @@ const authentication = async function (req, res, next) {
     if (!decodedToken)
       return res.status(400).send({status: false,msg: "Token Not Verified Please Enter Valid Token"});
 
-    req.token = decodedToken;
+    req.decodedToken = decodedToken;
 
     next();
   } catch (err) {
@@ -23,67 +23,35 @@ const authentication = async function (req, res, next) {
   }
 };
 
-// Authorization:->>>=======================================================================>>>
+// --------------------------------Authorization:-------------------------------------------->>>>
 
-//  const authorization = async function (req, res, next) {
-//   try {
-//     let authorLoggedIn = req.token.userId;
-//     let blogId = req.params.blogId;
-//     let checkBlogId = await blogModel.findById(blogId)
-//     if (!checkBlogId) {
-//       return res.status(404).send({status: false, message: "Blog not Found"})
-//   }
-//     if (checkBlogId.authorId != authorLoggedIn) {
-//       return res.status(403).send({status: false,msg: "loggedin author not allowed to modify changes"});
-//     }
-//     next();
-//   } catch (err) {
-//     return res.status(500).send({ status: false, msg: err.messge });
-//   }
-// };
-// ================================================================
-// const authoriseByQuery = async function (req, res, next) {
-//   try {
-//       let authorLoggedIn = req.token.authorId    //Accessing authorId from attribute
+ const authorization = async function (req, res, next) {
+  try {
+    let userLoggedIn = req.decodedToken.userId;
+    let bookId = req.params.bookId;
+    if( !validation.isValidObjectId(bookId)){
+      return res.status(400).send({ status: false, msg: "Please enter valid Book Id"})
+  
+  }
+    let checkBookId = await bookModel.findById(bookId)
+    if (!checkBookId) {
+      return res.status(404).send({status: false, message: "Book not Found"})
+  }
+    if (checkBookId.userId != userLoggedIn) {
+      return res.status(403).send({status: false,msg: "loggedin user not allowed to modify changes"});
+    }
+    next();
+  } catch (err) {
+    return res.status(500).send({ status: false, msg: err.messge });
+  }
+};
 
-//       let conditions = req.query
-//       //Checks if condition for deletion is coming or not
-//       if (Object.keys(conditions).length == 0) {
-//           return res.status(400).send({status: false,msg: "Provide information for deletion"})
-//       }
-//       if (conditions.authorId) {
-//           if (!conditions.authorId.match(/^[0-9a-f]{24}$/)) {
-//               return res.status(400).send({status: false,msg: "Not a valid ObjectId"})
-//           }
 
-//           if (conditions.authorId != authorLoggedIn) {
-//               return res.status(403).send({status: false,msg: 'Author not authorised'})
-//           }
-//       }
-//       let authorAccessing = await blogModel.find({ $and: [conditions, { isDeleted: false }] })
-     
-//       if (authorAccessing.length == 0) {
-//           return res.status(404).send({status: false,msg: "No Blogs Found" })
-//       }
-
-//       let accessedBlog = authorAccessing.filter(blogs => blogs.authorId == authorLoggedIn)
-      
-//       if (accessedBlog.length == 0) {
-//           return res.status(403).send({status: false,msg: "User Not Authorised"})
-//       }
-//       req.id = authorLoggedIn //attribute to store the author id from token
-//       next()
-//   }
-//   catch (err) {
-//       console.log("this error is from authorisation by query", err.message)
-//       res.status(500).send({ msg: err.message })
-//   }
-// }
 //============================================================================================
 
 module.exports.authentication = authentication;
-// module.exports.authorization = authorization;
-// module.exports.authoriseByQuery = authoriseByQuery;
+ module.exports.authorization = authorization;
+
 
 
 

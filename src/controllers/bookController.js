@@ -1,9 +1,10 @@
+const { response } = require("express");
 const bookModel = require("../models/bookModel");
 const userModel = require("../models/userModel");
 const validation = require("../validator/validation");
 let { isEmpty, isValidName, isValidObjectId, checkISBN } = validation;
 
-//___create blogs__________________________________________________________________________________
+//__________________________________________________________create blogs__________________________________________________________________________________
 
 const createBook = async function (req, res) {
     try {
@@ -103,89 +104,82 @@ const bookDetails = async function (req, res) {
     }
 }
 
+//----------------------update book details -------------------------------//
+
+const updateBook=async function(req,res){
+
+try{
+
+    let data=req.body
+    let {title, excerpt,ISBN}=data
+let bookId=req.params.bookId
+if(Object.keys(data).length==0){
+    return res.status(400).send({status:false,message:"Please enter book details for updating"})
+}
+
+let findBook=await bookModel.findById(bookId)
+if(findBook.isDeleted==true)
+return res.status(404).send({status:false,message:"Book is already deleted" })
+
+let checkTitle=await bookModel.findOne({title:title})
+if(checkTitle){
+    return res.status(400).send({status:false,message:"Book already exist with this title"})
+}
+
+let checkISBN=await bookModel.findOne({ISBN:ISBN})
+if(checkISBN){
+    return res.status(400).send({status:false,message:"Book already exist with this ISBN"})
+}
 
 
 
+let updatedBooks=await bookModel.findOneAndUpdate({_id:bookId},{$set:{title:title,excerpt:excerpt,ISBN}},{new:true})
+return res.status(200).send({status:true,message:"Update successful",data:updatedBooks})
+
+}catch(err){
+    return res.status(500).send({status:false,message:err.message})
+}
+
+}
 
 
 
+//------------------------------------delete books-------------------------------------//
+const deleteBook=async function(req,res){
 
-// //_____update api_______________________________________________________________________>>>
+try{
 
-// const updatedBlog = async (req, res) => {
-//   try {
-//     let alldata = req.body;
-//     let blogId = req.params.blogId;
+let bookId=req.params.bookId
 
-//     if (Object.keys(alldata).length == 0)
-//       return res.status(400).send({status: false, msg: "Please Enter Blog Details For Updating" });
+let checkBook=await bookModel.findById(bookId)
 
-//     if (!blogId)
-//       return res.status(400).send({ status: false, msg: "Blog Id is required" });
+if(!checkBook.isDeleted==false){
+    return res.status(400).send({status:false,message:"Book is already deleted"})
+}
 
-//     let findBlogId = await blogModel.findById(blogId);
+let bookDetails=await bookModel.findOneAndUpdate({bookId:bookId},{$set:{isDeleted:true,deletedAt:new Date()}},{new:true})
+return res.status(200).send({status:true,message:"Book delete successful"})
 
-//     if (findBlogId.isDeleted == true) {
-//       return res.status(404).send({ status: false, msg: "Blogs already deleted" });
-//     }
 
-//     let updatedBlog = await blogModel.findOneAndUpdate(
-//       { _id: blogId },
-//       {
-//         $set: {
-//           title: alldata.title,
-//           body: alldata.body,
-//           category: alldata.category,
-//           publishedAt: new Date(),
-//           isPublished: true,
-//         },
-//         $push: { tags: req.body.tags, subcategory: req.body.subcategory },
-//       },
-//       { new: true, upsert: true }
-//     );
-//     return res.status(200).send({ status: true, msg: updatedBlog });
-//   } catch (err) {
-//     res.status(500).send({ status: false, msg: err.message });
-//   }
-// };
-// //_______delete blog api 1________________________________________________________>>>
+}
 
-// const deletedBlog = async (req, res) => {
-//   try {
-//     let blogId = req.params.blogId;
-//     let checkBlogId = await blogModel.findById(blogId);
+catch(err){_
+    return res.status(500).send({status:false,message:err.massage})
+}
 
-//     if(!checkBlogId || (checkBlogId.isDeleted == true)){
-//       return res.status(404).send({status : false,msg : "Blog has been already deleted "})         
-//   }
-//      let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId },{ $set: { isDeleted: true,deletedAt: Date.now()}},{ new: true });
-//     return res.status(200).send({status: true,msg: "Blog has been deleted successfully",data:deletedBlog});
-//   } catch (err) {return res.status(500).send({ status: false, msg: err.message })}
-// };
+}
 
-// //______delete blogs api 2 by given fields _________________________________________>>>
+//-------------------------------------review books----------------------->>>>>>>>>
 
-// const deleteByQueryParams = async function (req, res) {
-//   try {
-//     let data = req.query;
-//       const deleteByQuery = await blogModel.updateMany({ $and: [data ,{authorId : req.id}, { isDeleted: false }] },{ $set: { isDeleted: true ,deletedAt:new Date()} },{ new: true, upsert : true })
-//       let count = deleteByQuery.modifiedCount
-//       if (deleteByQuery.modifiedCount==0) {
-//       return res.status(404).send({ status: false, msg: "No Blog Found"})
-//   }
-//       res.status(200).send({status : true, msg : "No of blogs deleted:", count })
-//   }
-//   catch (err) {res.status(500).send({status:false,msg: err.message})}
-// };
 
 // //======================module exporting ==================================
 
 module.exports.createBook = createBook;
 module.exports.getBooks = getBooks;
 module.exports.bookDetails = bookDetails
-// module.exports.updatedBlog = updatedBlog;
-// module.exports.deletedBlog = deletedBlog;
-// module.exports.deleteByQueryParams = deleteByQueryParams;
+module.exports.updateBook =updateBook;
+module.exports.deleteBook =deleteBook;
+
 
 
 

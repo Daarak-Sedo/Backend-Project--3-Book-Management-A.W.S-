@@ -22,6 +22,14 @@ router.get("/books",auth.authentication,bookController.getBooks)
 router.get("/books/:userId",auth.authentication,bookController.bookDetails)
 
 
+//---------------------------------------put API for books details update--------------------->>>>>>>>>>
+
+router.put("/books/:bookId", auth.authentication,auth.authorization,bookController.updateBook);
+
+//------------------------------------delete books--------------------------------------->>>>>>>>>>>>
+
+router.delete("/books/:bookId", auth.authentication,auth.authorization,bookController.deleteBook);
+
 
 
 module.exports = router;
