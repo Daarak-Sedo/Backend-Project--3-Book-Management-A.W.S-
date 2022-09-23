@@ -36,13 +36,13 @@ const bookReview = async function (req, res) {
             return res.status(400).send({ status: false, message: "please provide valid rating " })
         };
     
-        requestBody.reviewedAt = new Date()
+        // requestBody.reviewedAt = new Date()
         requestBody.bookId = bookId
 
         const reviewDoc = await reviewModel.create(requestBody)
         let updatedBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $inc: { reviews: 1 } }, { new : true })
 
-        //updatedBook = updatedBook.toObject();
+        updatedBook = updatedBook.toObject();
         updatedBook['reviewsData'] = [reviewDoc];
 
         return res.status(201).send({ status: true, message: "Review created successfully", data: updatedBook })
@@ -162,8 +162,6 @@ const deleteBookReview = async function (req, res) {
             );
             await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: -1 } })
             return res.status(200).send({ status: true, message: "deleted succesfully...!" })
-
-        
 
     } catch (err) {
         return res.status(500).send({ status: false, message: err.message })

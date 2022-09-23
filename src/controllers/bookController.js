@@ -74,7 +74,7 @@ const getBooks = async (req, res) => {
                 return res.status(400).send({ status: false, msg: "please enter a valid userId" })
         }
 
-        let getBook = await bookModel.find({ isDeleted: false, ...data }).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 }).sort({ title: 1 })
+        let getBook = await bookModel.find({ isDeleted: false, ...data }).select({ title: 1, excerpt: 1, userId: 1, category: 1,subcategory:1, releasedAt: 1, reviews: 1 }).sort({ title: 1 })
         if (getBook.length == 0)
             return res.status(404).send({ status: false, message: "no documents found with this query" })
 
@@ -116,15 +116,19 @@ let bookId=req.params.bookId
 if(Object.keys(data).length==0){
     return res.status(400).send({status:false,message:"Please enter book details for updating"})
 }
-if (!isEmpty(excerpt)) {
+if(excerpt){
+if (!isEmpty(excerpt)) 
     return res.status(400).send({ status: false, msg: "Please provide excerpt of blog" });
 }
+
+if(title){
 if (!isEmpty(title)) 
     return res.status(400).send({ status: false, msg: "Please provide title" });
-
+}
+if(ISBN){
 if (!isValidISBN(ISBN)) 
     return res.status(400).send({ status: false, msg: "Please provide a valid ISBN" });
-
+}
 let findBook=await bookModel.findById(bookId)
 if(findBook.isDeleted==true)
 return res.status(404).send({status:false,message:"Book is already deleted" })
@@ -165,13 +169,12 @@ if(!checkBook.isDeleted==false){
     return res.status(400).send({status:false,message:"Book is already deleted"})
 }
 
-let bookDetails=await bookModel.findOneAndUpdate({bookId:bookId},{$set:{isDeleted:true,deletedAt:new Date()}},{new:true})
+await bookModel.findOneAndUpdate({bookId:bookId},{$set:{isDeleted:true,deletedAt:new Date()}},{new:true})
 return res.status(200).send({status:true,message:"Book delete successful"})
-
 
 }
 
-catch(err){_
+catch(err){
     return res.status(500).send({status:false,message:err.massage})
 }
 
