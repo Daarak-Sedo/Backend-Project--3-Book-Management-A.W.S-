@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const bookController = require("../controllers/bookController");
+const reviewController = require('../controllers/reviewController');
 const auth = require("../middleware/auth");
 
 //______________________________post api (user creation)__________________________________>>>
@@ -32,7 +33,7 @@ router.delete("/books/:bookId", auth.authentication,auth.authorization,bookContr
 
 
 
-router.post("/books/:bookId/review",bookController.bookReview)
+router.post("/books/:bookId/review",reviewController.bookReview)
 
 
 

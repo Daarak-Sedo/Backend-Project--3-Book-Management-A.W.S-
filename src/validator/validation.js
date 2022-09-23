@@ -10,7 +10,6 @@ const isValidPhone = function (phone) {
   return /^([+]\d{2})?\d{10}$/.test(phone);
 };
 
-
 //<<----------------Validation for Email ---------------->>
 const isValidEmail = function (email) {
   return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
@@ -61,6 +60,11 @@ const isValidISBN=function (ISBN){
   return isbnRegex.test(ISBN)
 }
 
+const isValidRating = (rating) => {
+  return /^[1-5]{1}$/.test(rating);
+
+};
+
   
 module.exports = {
     isEmpty,
@@ -71,6 +75,7 @@ module.exports = {
     isValidISBN,
     isValidName,
     isValidPassword,
+    isValidRating,
 }  
 
 
