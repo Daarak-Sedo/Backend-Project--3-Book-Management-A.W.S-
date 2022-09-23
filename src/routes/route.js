@@ -31,10 +31,13 @@ router.put("/books/:bookId", auth.authentication,auth.authorization,bookControll
 
 router.delete("/books/:bookId", auth.authentication,auth.authorization,bookController.deleteBook);
 
-
+// ---------------------------------create reviews----------------------------------->>>>>>>>>
 
 router.post("/books/:bookId/review",reviewController.bookReview)
 
+// ------------------------------------update reviews-------------------------------------->>>>>>>>>>>
+
+router.put("/books/:bookId/review/:reviewId",reviewController.updateReview)
 
 
 module.exports = router;

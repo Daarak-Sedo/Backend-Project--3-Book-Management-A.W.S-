@@ -211,22 +211,14 @@ Refer below sample
   review: "An exciting nerving thriller. A gripping tale. A must read book."
 }
 ```
-/*
-    "status": true,
-    "message": "review created successful",
+  "status": true,
+    "message": "Successfully updated the review of the book.",
     "data": {
-        "bookId": "6164272b339cbc2540b3027c",
+        "_id": "632d55e2129ce7c05e89cccb",
         "reviewedBy": "Guest",
-        "reviewedAt": "2021-02-19",
         "rating": 3,
-        "review": "very good",
-        "isDeleted": false,
-        "_id": "632d545c1b6403547864eeac",
-        "createdAt": "2022-09-23T06:38:20.884Z",
-        "updatedAt": "2022-09-23T06:38:20.884Z",
-        "__v": 0
-    }*/
-
+        "review": "110% would recommend"
+    }
 ## Response examples
 ### Get books response
 ```yaml
