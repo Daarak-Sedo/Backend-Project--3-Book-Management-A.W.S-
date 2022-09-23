@@ -40,6 +40,11 @@ router.post("/books/:bookId/review",reviewController.bookReview)
 router.put("/books/:bookId/review/:reviewId",reviewController.updateReview)
 
 
+//------------------------------------Delete Book review----------------------------------------->>>>>.
+
+
+router.delete("/books/:bookId/review/:reviewId",reviewController.deleteBookReview)
+
 module.exports = router;
 
 

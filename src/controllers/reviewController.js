@@ -35,12 +35,7 @@ const bookReview = async function (req, res) {
         if (!isValidRating(rating)) {
             return res.status(400).send({ status: false, message: "please provide valid rating " })
         };
-       
-       
-        // if (isDeleted && typeof isDeleted != Boolean ) {
-        //     return res.status(400).send({ status: false, message: "isDeleted is in wrong format" })
-        // };
-
+    
         requestBody.reviewedAt = new Date()
         requestBody.bookId = bookId
 
@@ -102,8 +97,6 @@ const updateReview = async function (req, res) {
                 return res.status(400).send({ status: false, message: "rating must be between 1 and 5" })
             };
         };
-
-        // --------------------------- finding book and review on which we have to update.
         const searchBook = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ createdAt: 0, updatedAt: 0, __v: 0 })
         if (!searchBook) {
             return res.status(404).send({ status: false, message: `Book does not exist by this ${bookId}. ` })
@@ -121,9 +114,11 @@ const updateReview = async function (req, res) {
 
         const updateReviewDetails = await reviewModel.findOneAndUpdate({ _id: reviewID }, { review: review, rating: rating, reviewedBy: reviewedBy }, { new: true })//.select({review:1,rating:1,reviewedBy:1})
 
-        // let destructureForResponse = searchBook.toObject();
-        searchBook['reviewsData'] = [updateReviewDetails];
-        return res.status(200).send({ status: true, message: "Successfully updated the review of the book.", data: searchBook })
+         let destructureForResponse = searchBook.toObject();
+         destructureForResponse['reviewsData'] = [updateReviewDetails];
+        
+        
+        return res.status(200).send({ status: true, message: "Successfully updated the review of the book.", data: destructureForResponse })
 
 
     } catch (err) {
@@ -132,4 +127,50 @@ const updateReview = async function (req, res) {
 }
 
 
-module.exports={bookReview,updateReview}
+//---------------------------------delete  book review by query param------------------------------------ 
+
+const deleteBookReview = async function (req, res) {
+    try {
+        //bookId from Params
+        let bookId = req.params.bookId;
+        let reviewId = req.params.reviewId;
+
+        if (!isValidObjectId(bookId)) 
+        return res.status(400).send({ status: false, message: "Please enter valid bookId...!" })
+
+        const bookExist = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ deletedAt: 0 })
+        if (!bookExist) return res.status(404).send({ status: false, message: "book not found" });
+
+        //reviewId from params
+
+        
+        if (!isValidObjectId(reviewId))
+         return res.status(400).send({ status: false, message: "enter valid reviewId...!" })
+
+        //DB call
+        const reviewExist = await reviewModel.findOne({ _id: reviewId, bookId: bookId })
+        if (!reviewExist) return res.status(404).send({ status: false, message: "review not found...!" })
+
+        if (reviewExist.isDeleted == true) 
+        return res.status(400).send({ status: false, data: "review is already deleted...!" })
+        
+
+            await reviewModel.findOneAndUpdate(
+                { _id: reviewId, bookId: bookId, isDeleted: false },
+                { $set: { isDeleted: true } },
+                { new: true }
+            );
+            await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: -1 } })
+            return res.status(200).send({ status: true, message: "deleted succesfully...!" })
+
+        
+
+    } catch (err) {
+        return res.status(500).send({ status: false, message: err.message })
+
+    }
+
+}
+
+
+module.exports={bookReview,updateReview,deleteBookReview}
