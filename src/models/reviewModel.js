@@ -16,7 +16,6 @@ const reviewSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-
     rating: {
         type: Number,
         min: 1,
@@ -34,6 +33,4 @@ const reviewSchema = new mongoose.Schema({
     },
 },
 {timestamps:true})
-
-
 module.exports=mongoose.model("review",reviewSchema)
