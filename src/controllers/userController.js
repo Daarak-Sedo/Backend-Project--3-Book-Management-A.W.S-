@@ -27,8 +27,9 @@ const createUser = async function (req, res) {
 
     if (!phone)
     return res.status(400).send({ status: false, message: "Please Enter Your phone Number" });
-  // if (!isValidPhone(phone.trim()))
-  //   return res.status(400).send({status: false,message: "Phone no. should contain only 10 digits"});
+    if (!isValidPhone(phone))
+    return res.status(400).send({ status: false, message: "Please Enter 10 digit phone Number" });
+ 
 
   let existedphone = await userModel.findOne({ phone });
   if (existedphone)

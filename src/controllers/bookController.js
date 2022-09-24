@@ -1,6 +1,7 @@
 const bookModel = require("../models/bookModel");
 const userModel = require("../models/userModel");
 const validation = require("../validator/validation");
+const moment = require("moment");
 
 let { isEmpty, isValidName, isValidObjectId, isValidISBN } = validation;
 
@@ -9,19 +10,36 @@ let { isEmpty, isValidName, isValidObjectId, isValidISBN } = validation;
 const createBook = async function (req, res) {
     try {
         let data = req.body;
-        let { title, excerpt, userId, ISBN, category, subcategory } = data;
+        let { title, excerpt, userId, ISBN, category, subcategory,releasedAt } = data;
 
         if (Object.keys(data).length == 0) {
             return res.status(400).send({ status: false, msg: "Please provide key in request body" });
         }
 
         if (!isEmpty(userId)) {
-            return res.status(400).send({ status: false, msg: "Please provide author ID" });
+            return res.status(400).send({ status: false, msg: "Please provide user ID" });
         }
+        if (!isValidObjectId(userId)) {
+            return res.status(400).send({ status: false, msg: "Provide a valid user id" });
+        }
+
+        let checkUser = await userModel.findById(userId)
+        if(!checkUser)
+       return res.status(404).send({ status: false, message: "User not found" });
+
+    
+        
+
         if (!isEmpty(title)) {
             return res.status(400).send({ status: false, msg: "Please provide title" });
         }
 
+
+        let checkTitle = await bookModel.findOne({title:title})
+        if(checkTitle)
+       return res.status(400).send({ status: false, message: "Title  must be unique" });
+
+    
         if (!isEmpty(excerpt)) {
             return res.status(400).send({ status: false, msg: "Please provide excerpt of blog" });
         }
@@ -33,26 +51,31 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Please provide subcategory" });
         }
 
-        if (!isValidName(title)) {
-            return res.status(400).send({ status: false, msg: "title should be alphabets only" });
-        }
 
         if (!isValidName(category)) {
             return res.status(400).send({ status: false, msg: "category should be alphabets only" });
         }
 
-        if (!isValidObjectId(userId)) {
-            return res.status(400).send({ status: false, msg: "Provide a valid author id" });
-        }
+        
 
         if (!isEmpty(ISBN)) {
             return res.status(400).send({ status: false, msg: "Please provide ISBN" });
         }
 
-        if (!checkISBN(ISBN)) {
+        if (!isValidISBN(ISBN)) {
             return res.status(400).send({ status: false, msg: "Please provide a valid ISBN" });
         }
+        let checkISBN = await bookModel.findOne({ISBN:ISBN})
+        if(checkISBN)
+       return res.status(404).send({ status: false, message: " ISBN must be unique " });
 
+       if(!releasedAt){
+        return res.status(400).send({status:false,message:"Must present releseAt"})
+       }
+       if (!moment.utc(releasedAt, "YYYY-MM-DD", true).isValid()) 
+       return res.status(400).send({ status: false, message: "enter date in valid format eg. (YYYY-MM-DD)...!" })
+
+    
         let bookData = await bookModel.create(data)
         res.status(201).send({ status: true, msg: "Blog has been created", data: bookData });
 
