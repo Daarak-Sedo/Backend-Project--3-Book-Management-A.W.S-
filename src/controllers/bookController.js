@@ -180,29 +180,32 @@ const deleteBook = async function (req, res) {
 
         let checkBook = await bookModel.findById(bookId)
 
-        if (!checkBook.isDeleted == false) {
+        if (!checkBook.isDeleted == false)
             return res.status(400).send({ status: false, message: "Book is already deleted" })
+
+        if (checkBook.isDeleted == false) {   //condition wants to excecute
+
+            await bookModel.findOneAndUpdate(
+                { _id: bookId },
+                { $set: { isDeleted: true, deletedAt: new Date() } });
+                return res.status(200).send({status:true,message:"book is deleted sussesfully"})
         }
 
-        await bookModel.findOneAndUpdate({ bookId: bookId }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })
-        return res.status(200).send({ status: true, message: "Book delete successful" })
-
-    }
-
-    catch (err) {
+    } catch (err) {
         return res.status(500).send({ status: false, message: err.massage })
     }
+
 
 }
 
 
-// //======================module exporting ==================================
+    // //======================module exporting ==================================
 
-module.exports.createBook = createBook;
-module.exports.getBooks = getBooks;
-module.exports.bookDetails = bookDetails
-module.exports.updateBook = updateBook;
-module.exports.deleteBook = deleteBook;
+    module.exports.createBook = createBook;
+    module.exports.getBooks = getBooks;
+    module.exports.bookDetails = bookDetails
+    module.exports.updateBook = updateBook;
+    module.exports.deleteBook = deleteBook;
 
 
 

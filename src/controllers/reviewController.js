@@ -2,7 +2,7 @@ const bookModel = require("../models/bookModel");
 const userModel = require("../models/userModel");
 const validation = require("../validator/validation");
 const reviewModel = require("../models/reviewModel");
-let { isEmpty,  isValidObjectId, isValidRating,isValidName } = validation;
+let { isEmpty, isValidObjectId, isValidRating, isValidName } = validation;
 
 
 const bookReview = async function (req, res) {
@@ -35,12 +35,12 @@ const bookReview = async function (req, res) {
         if (!isValidRating(rating)) {
             return res.status(400).send({ status: false, message: "please provide valid rating " })
         };
-    
+
         // requestBody.reviewedAt = new Date()
         requestBody.bookId = bookId
 
         const reviewDoc = await reviewModel.create(requestBody)
-        let updatedBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $inc: { reviews: 1 } }, { new : true })
+        let updatedBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $inc: { reviews: 1 } }, { new: true })
 
         updatedBook = updatedBook.toObject();
         updatedBook['reviewsData'] = [reviewDoc];
@@ -103,7 +103,7 @@ const updateReview = async function (req, res) {
         }
         const searchReview = await reviewModel.findOne({ _id: reviewID, isDeleted: false })
         if (!searchReview) {
-            return res.status(404).send({ 
+            return res.status(404).send({
                 status: false,
                 message: `Review does not exist by this ${reviewID}.`
             })
@@ -114,10 +114,10 @@ const updateReview = async function (req, res) {
 
         const updateReviewDetails = await reviewModel.findOneAndUpdate({ _id: reviewID }, { review: review, rating: rating, reviewedBy: reviewedBy }, { new: true })//.select({review:1,rating:1,reviewedBy:1})
 
-         let destructureForResponse = searchBook.toObject();
-         destructureForResponse['reviewsData'] = [updateReviewDetails];
-        
-        
+        let destructureForResponse = searchBook.toObject();
+        destructureForResponse['reviewsData'] = [updateReviewDetails];
+
+
         return res.status(200).send({ status: true, message: "Successfully updated the review of the book.", data: destructureForResponse })
 
 
@@ -135,33 +135,33 @@ const deleteBookReview = async function (req, res) {
         let bookId = req.params.bookId;
         let reviewId = req.params.reviewId;
 
-        if (!isValidObjectId(bookId)) 
-        return res.status(400).send({ status: false, message: "Please enter valid bookId...!" })
+        if (!isValidObjectId(bookId))
+            return res.status(400).send({ status: false, message: "Please enter valid bookId...!" })
 
         const bookExist = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ deletedAt: 0 })
         if (!bookExist) return res.status(404).send({ status: false, message: "book not found" });
 
         //reviewId from params
 
-        
+
         if (!isValidObjectId(reviewId))
-         return res.status(400).send({ status: false, message: "enter valid reviewId...!" })
+            return res.status(400).send({ status: false, message: "enter valid reviewId...!" })
 
         //DB call
         const reviewExist = await reviewModel.findOne({ _id: reviewId, bookId: bookId })
         if (!reviewExist) return res.status(404).send({ status: false, message: "review not found...!" })
 
-        if (reviewExist.isDeleted == true) 
-        return res.status(400).send({ status: false, data: "review is already deleted...!" })
-        
+        if (reviewExist.isDeleted == true)
+            return res.status(400).send({ status: false, data: "review is already deleted...!" })
 
-            await reviewModel.findOneAndUpdate(
-                { _id: reviewId, bookId: bookId, isDeleted: false },
-                { $set: { isDeleted: true } },
-                { new: true }
-            );
-            await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: -1 } })
-            return res.status(200).send({ status: true, message: "deleted succesfully...!" })
+
+        await reviewModel.findOneAndUpdate(
+            { _id: reviewId, bookId: bookId, isDeleted: false },
+            { $set: { isDeleted: true } },
+            { new: true }
+        );
+        await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: -1 } })
+        return res.status(200).send({ status: true, message: "deleted succesfully...!" })
 
     } catch (err) {
         return res.status(500).send({ status: false, message: err.message })
@@ -171,4 +171,4 @@ const deleteBookReview = async function (req, res) {
 }
 
 
-module.exports={bookReview,updateReview,deleteBookReview}
+module.exports = { bookReview, updateReview, deleteBookReview }
