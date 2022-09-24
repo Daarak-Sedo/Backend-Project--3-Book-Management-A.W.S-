@@ -10,7 +10,7 @@ const bookReview = async function (req, res) {
         let requestBody = req.body
         let bookId = req.params.bookId
 
-        let { reviewedBy, rating, review } = requestBody
+        let { reviewedBy, rating, review,reviewedAt } = requestBody
         if (!isValidObjectId(bookId)) {
             return res.status(400).send({ status: false, message: "bookId is in wrong format" })
         };
@@ -35,8 +35,10 @@ const bookReview = async function (req, res) {
         if (!isValidRating(rating)) {
             return res.status(400).send({ status: false, message: "please provide valid rating " })
         };
+    
+ 
 
-        // requestBody.reviewedAt = new Date()
+         requestBody.reviewedAt = new Date()
         requestBody.bookId = bookId
 
         const reviewDoc = await reviewModel.create(requestBody)
