@@ -160,8 +160,6 @@ const updateBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "Book already exist with this ISBN" })
         }
 
-
-
         let updatedBooks = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { title: title, excerpt: excerpt, ISBN } }, { new: true })
         return res.status(200).send({ status: true, message: "Update successful", data: updatedBooks })
 
