@@ -1,7 +1,8 @@
 let jwt = require("jsonwebtoken");
 const bookModel = require("../models/bookModel");
 const validation = require("../validator/validation");
-// Authentication:->>>====================================================================>>>
+
+//---------------------------- Authentication:------------------------------------->>>
 
 const authentication = async function (req, res, next) {
   try {
@@ -23,7 +24,7 @@ const authentication = async function (req, res, next) {
   }
 };
 
-// --------------------------------Authorization:-------------------------------------------->>>>
+// --------------------------------Authorization:--------------------------------------->>>
 
  const authorization = async function (req, res, next) {
   try {
@@ -45,7 +46,6 @@ const authentication = async function (req, res, next) {
     return res.status(500).send({ status: false, msg: err.messge });
   }
 };
-
 
 //============================================================================================
 

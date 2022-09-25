@@ -4,7 +4,7 @@ const validation = require("../validator/validation");
 
 let {isEmpty,isValidEmail,isValidPhone, isValidPassword,pincode,street,city} = validation;
 
-//__________post Api for creating author______________________>>>
+//-------------post Api for creating author--------------------->>>
 
 const createUser = async function (req, res) {
   try {
@@ -74,7 +74,7 @@ const createUser = async function (req, res) {
   }
 };
 
-//________post api : login author _______________________________>>>
+//-----------post api : login author -------------------------->>>
 
 let loginUser = async function (req, res) {
   try {

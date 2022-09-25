@@ -4,7 +4,7 @@ const validation = require("../validator/validation");
 const reviewModel = require("../models/reviewModel");
 let { isEmpty, isValidObjectId, isValidRating, isValidName } = validation;
 
-
+//-------------------------Book Review creation---------------------->>>
 const bookReview = async function (req, res) {
     try {
         let requestBody = req.body
@@ -36,8 +36,6 @@ const bookReview = async function (req, res) {
             return res.status(400).send({ status: false, message: "please provide valid rating " })
         };
 
-
-
         requestBody.reviewedAt = new Date()
         requestBody.bookId = bookId
 
@@ -52,6 +50,8 @@ const bookReview = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message })
     }
 }
+
+//------------------------update review----------------------------->>>
 
 const updateReview = async function (req, res) {
     try {
@@ -71,14 +71,14 @@ const updateReview = async function (req, res) {
             return res.status(400).send({ status: false, message: 'Invalid request parameters. Please provide review details to update.' })
         }
 
-        // ---------------------------- checking review validation.
+// -------------------------checking review validation.--------------->>
         if (review) {
             if (!isEmpty(review)) {
                 return res.status(400).send({ status: false, message: "Review is missing ! Please provide the review details to update." })
             }
 
         }
-        // ---------------------------- checking reviewedBy validation.
+// ------------------------checking reviewedBy validation-------------->>
         if (reviewedBy) {
 
             if (!isEmpty(reviewedBy)) {
@@ -89,7 +89,7 @@ const updateReview = async function (req, res) {
             };
         };
 
-        // --------------------------- checking whether the rating is number or character.
+// ----------- checking whether the rating is number or character------->>
         if (rating) {
 
             if (typeof rating != "number") {
@@ -129,7 +129,7 @@ const updateReview = async function (req, res) {
 }
 
 
-//---------------------------------delete  book review by query param------------------------------------ 
+//------------------delete  book review by query param---------------------->>
 
 const deleteBookReview = async function (req, res) {
     try {
@@ -145,7 +145,6 @@ const deleteBookReview = async function (req, res) {
 
         //reviewId from params
 
-
         if (!isValidObjectId(reviewId))
             return res.status(400).send({ status: false, message: "enter valid reviewId...!" })
 
@@ -155,7 +154,6 @@ const deleteBookReview = async function (req, res) {
 
         if (reviewExist.isDeleted == true)
             return res.status(400).send({ status: false, data: "review is already deleted...!" })
-
 
         await reviewModel.findOneAndUpdate(
             { _id: reviewId, bookId: bookId, isDeleted: false },

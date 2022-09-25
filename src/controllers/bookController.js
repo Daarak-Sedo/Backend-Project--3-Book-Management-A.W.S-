@@ -5,7 +5,7 @@ const moment = require("moment");
 
 let { isEmpty, isValidName, isValidObjectId, isValidISBN } = validation;
 
-//_____________create blogs__________________________________________________________>>>
+//------------------_create blogs---------------------------------------->>>
 
 const createBook = async function (req, res) {
     try {
@@ -78,8 +78,7 @@ const createBook = async function (req, res) {
     }
 };
 
-// //_______get api________________________________________________________________________>>>
-
+//---------------------------get api--------------------------------------->>>
 const getBooks = async (req, res) => {
     try {
         let data = req.query;
@@ -102,7 +101,7 @@ const getBooks = async (req, res) => {
         return res.status(500).send({ status: false, msg: err.massage })
     }
 }
-//--------------------------get book details by params-------------------
+//--------------------------get book details by params------------------->>
 
 const bookDetails = async function (req, res) {
     try {
@@ -121,7 +120,7 @@ const bookDetails = async function (req, res) {
     }
 }
 
-//----------------------update book details -------------------------------//
+//----------------------update book details ------------------------------->>
 
 const updateBook = async function (req, res) {
 
@@ -169,9 +168,7 @@ const updateBook = async function (req, res) {
 
 }
 
-
-
-//------------------------------------delete books-------------------------------------//
+//-------------------------------delete books----------------------------------->>
 const deleteBook = async function (req, res) {
 
     try {
@@ -195,11 +192,9 @@ const deleteBook = async function (req, res) {
         return res.status(500).send({ status: false, message: err.massage })
     }
 
-
 }
 
-
-    // //======================module exporting ==================================
+    //======================module exporting ==================================
 
     module.exports.createBook = createBook;
     module.exports.getBooks = getBooks;

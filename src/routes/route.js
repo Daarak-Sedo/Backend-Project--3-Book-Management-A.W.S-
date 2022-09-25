@@ -5,45 +5,40 @@ const bookController = require("../controllers/bookController");
 const reviewController = require('../controllers/reviewController');
 const auth = require("../middleware/auth");
 
-//______________________________post api (user creation)__________________________________>>>
+//-----------------------post api (user creation)------------------------------->>>
 router.post("/register", userController.createUser);
 
-//_______________________________post api for login user ________________________________>>>
+//-----------------------post api for login user ------------------------------->>>
 router.post("/login", userController.loginUser);
 
-// ------------------------------------post api for createBook------------------------------>>>
+//-----------------------post api for createBook-------------------------------->>>
 router.post("/books",auth.authentication,bookController.createBook)
 
-
-//------------------------------------Get API for book details by Query--------------------->>>
+//----------------------Get API for book details by Query------------------------>>>
 router.get("/books",auth.authentication,bookController.getBooks)
 
-
-//---------------------------------Get API for all book details by param------------------------->>>
+//---------------------Get API for all book details by param--------------------->>>
 router.get("/books/:userId",auth.authentication,bookController.bookDetails)
 
-
-//---------------------------------------put API for books details update--------------------->>>>>>>>>>
-
+//-----------------------put API for books details update------------------------->>>
 router.put("/books/:bookId", auth.authentication,auth.authorization,bookController.updateBook);
 
-//------------------------------------delete books--------------------------------------->>>>>>>>>>>>
-
+//-----------------------delete books---------------------------------------------->>>
 router.delete("/books/:bookId", auth.authentication,auth.authorization,bookController.deleteBook);
 
-// ---------------------------------create reviews----------------------------------->>>>>>>>>
-
+// -----------------------create reviews------------------------------------------->>>
 router.post("/books/:bookId/review",reviewController.bookReview)
 
-// ------------------------------------update reviews-------------------------------------->>>>>>>>>>>
-
+// -----------------------update reviews------------------------------------------->>>
 router.put("/books/:bookId/review/:reviewId",reviewController.updateReview)
 
-
-//------------------------------------Delete Book review----------------------------------------->>>>>.
-
-
+//------------------------Delete Book review---------------------------------------->>>
 router.delete("/books/:bookId/review/:reviewId",reviewController.deleteBookReview)
+
+//-----------------------API for wrong route-of-API--------------------------------->>>
+router.all("/*", function (req, res) {
+   return res.status(400).send({status: false,message: "Path Not Found"});
+});
 
 module.exports = router;
 
