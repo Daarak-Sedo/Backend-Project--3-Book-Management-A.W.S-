@@ -57,7 +57,7 @@ const createBook = async function (req, res) {
         }
 
         if (!isValidISBN(ISBN)) {
-            return res.status(400).send({ status: false, msg: "Please provide a valid ISBN" });
+            return res.status(400).send({ status: false, msg: "Please provide a valid 13 Digit  ISBN" });
         }
         let checkISBN = await bookModel.findOne({ ISBN: ISBN })
         if (checkISBN)
