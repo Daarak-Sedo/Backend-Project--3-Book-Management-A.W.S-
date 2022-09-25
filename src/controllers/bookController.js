@@ -185,10 +185,10 @@ const deleteBook = async function (req, res) {
 
         if (checkBook.isDeleted == false) {   //condition wants to excecute
 
-            await bookModel.findOneAndUpdate(
+            let deletedDoc = await bookModel.findOneAndUpdate(
                 { _id: bookId },
-                { $set: { isDeleted: true, deletedAt: new Date() } });
-                return res.status(200).send({status:true,message:"book is deleted sussesfully"})
+                { $set: { isDeleted: true, deletedAt: new Date() } },{new:true})
+                return res.status(200).send({status:true,message:"book is deleted sussesfully",data:deletedDoc})
         }
 
     } catch (err) {
