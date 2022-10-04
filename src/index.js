@@ -3,8 +3,11 @@ const mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 const route = require('./routes/route.js');
 const app = express();
+const multer = require('multer')
 
 app.use(bodyParser.json());
+app.use(multer().any())
+app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect("mongodb+srv://Bhuwan:fake2fake@cluster0.m4domip.mongodb.net/Project-2?retryWrites=true&w=majority", {useNewUrlParser: true
 })
